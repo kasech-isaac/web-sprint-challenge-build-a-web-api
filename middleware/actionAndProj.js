@@ -7,7 +7,7 @@ function validateUserId() {
       .get(req.params.id)
       .then((user) => {
         if (user) {
-          // attach "user data the request so we could access it inmidw func"
+    
           req.user = user;
           next();
         } else {
@@ -22,9 +22,9 @@ function validateUserId() {
 
 function validateUser(){
     return (req, res, next)=>{
-        if (!req.body.name || !req.body.project_id) {
-            return res.status(400).json({
-                message: "Missing user name or email",
+        if (!req.body.name ||!req.body.description) {
+            res.status(400).json({
+                message: "Missing user name or description",
             })
         }
         next()
@@ -34,5 +34,4 @@ function validateUser(){
 module.exports={
     validateUser,
     validateUserId,
-    // validatePost
 }
