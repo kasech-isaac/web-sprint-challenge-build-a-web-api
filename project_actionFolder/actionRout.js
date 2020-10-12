@@ -30,7 +30,7 @@ router.post("/", validateUser(), (req, res) => {
 
 router.put('/:id',validateUser(), validateUserId(),(req, res) => {
     // do your magic!
-    action_db.update(req.params.id, req.body)
+    action_db.update(req.params.id, req.body.description)
     .then((update)=>{
       if(update){
         res.status(200).json(update)
