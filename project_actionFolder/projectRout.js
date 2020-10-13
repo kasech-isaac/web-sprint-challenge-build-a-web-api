@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("../data/helpers/projectModel");
-const { validateUserId, validateUser,validatePost } = require("../middleware/actionAndProj");
+const { validateProId, validateproj } = require("../middleware/projMidd");
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", validateUserId(), (req, res) => {
+router.get("/:id", validateProId(), (req, res) => {
   res.status(200).json(req.user);
 });
 
@@ -34,7 +34,7 @@ router.post('/',(req, res) => {
     })
   });
 
-router.put('/:id',validateUser(), validateUserId(),(req, res) => {
+router.put('/:id',validateproj(), validateProId(),(req, res) => {
     // do your magic!
    db.update(req.params.id, req.body.description)
     .then((update)=>{
@@ -68,6 +68,21 @@ router.put('/:id',validateUser(), validateUserId(),(req, res) => {
   })
   
   });
+  router.post('/:id/posts',(req, res) => {
+    if (!req.body.description){
+        return res.status(400).json({
+        message:"Need a description value."
+         })
+         }
+   db.getProjectActions(req.params.id)
+  .then(post=>{
+    res.status(200).json(post)
+   
+  })
+  .catch((error) => {
+    next(error)
+  })
 
+});
 
 module.exports = router;

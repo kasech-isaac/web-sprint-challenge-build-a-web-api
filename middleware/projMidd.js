@@ -1,10 +1,9 @@
 const proj_db = require("../data/helpers/projectModel");
-const action_db = require("../data/helpers/actionModel");
+// const action_db = require("../data/helpers/actionModel");
 
-function validateUserId() {
+function validateProId() {
   return (req, res, next) => {
-    action_db
-      .get(req.params.id)
+    proj_db.get(req.params.id)
       .then((user) => {
         if (user) {
     
@@ -20,7 +19,7 @@ function validateUserId() {
   };
 }
 
-function validateUser(){
+function validateproj(){
     return (req, res, next)=>{
         if (!req.body.project_id ||!req.body.description) {
             res.status(400).json({
@@ -31,24 +30,10 @@ function validateUser(){
     }
 }
 
-function validateProjectId(){
-  postDb.getById(req.params.id)
-  .then((project)=>{
-      if (project){
-          req.project=project
-          next()
-      }else{
-          res.status(400).json({message: "invalid project id"})
-      }
-  })
-}
-
-
-
 module.exports={
-    validateUser,
-    validateUserId,
-    validateProjectId
+    validateproj,
+    validateProId,
+
    
 
 }

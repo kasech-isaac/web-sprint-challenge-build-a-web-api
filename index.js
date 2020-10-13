@@ -1,6 +1,6 @@
 const express = require("express")
 const actionRouter = require("./project_actionFolder/actionRout");
-
+const projectRouter=require("./project_actionFolder/projectRout")
 const server =express()
 const port = 3000
 
@@ -9,11 +9,13 @@ function timing(req, res, next) {
     console.log(`[${time}]().toISOString() ${req.method} ${req.url}`)
     next()
   }
+  
   server.use(timing);
 
-  server.use("/user",actionRouter)
+  server.use(express.json())
+  server.use("/action",actionRouter)
+  server.use("/project",projectRouter)
 
-server.use(express.json())
 // server.use("/user",actionRout);
 
 // err mideleware
