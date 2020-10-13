@@ -22,7 +22,7 @@ function validateUserId() {
 
 function validateUser(){
     return (req, res, next)=>{
-        if (!req.body.name ||!req.body.description) {
+        if (!req.body.project_id ||!req.body.description) {
             res.status(400).json({
                 message: "Missing user name or description",
             })
@@ -31,7 +31,11 @@ function validateUser(){
     }
 }
 
+
+
 module.exports={
     validateUser,
     validateUserId,
+   
+
 }
