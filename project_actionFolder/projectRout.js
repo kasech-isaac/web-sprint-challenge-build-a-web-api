@@ -1,32 +1,40 @@
 const express = require("express");
 const db = require("../data/helpers/projectModel");
-const { validateProId, validateproj } = require("../middleware/projMidd");
+const {  validatePro } = require("../middleware/projMidd");
 const router = express.Router();
 
 router.get("/", (req, res) => {
   
  db.get()
-    .then((user) => {
-      res.status(200).json(user);
+    .then((project) => {
+      res.status(200).json(project);
     })
     .catch((error) => {
       next(error);
     });
 });
 
-router.get("/:id", validateProId(), (req, res) => {
+
+router.get("/:id", (req, res) => {
+  db.get(req.params.id)
+      .then(project => {
+          res.status(200).json(project);
+      })
+      .catch((error) => {
+        next(error)
+      })
+});
+
+
+router.get("/:id", (req, res) => {
   res.status(200).json(req.user);
 });
 
-router.post('/',(req, res) => {
-    if (!req.body.name || !req.body.description) {
-		return res.status(400).json({
-			message: "Missing user name or email",
-		})
-	}
+router.post('/',validatePro(),(req, res) => {
+  
     db.insert(req.body)
-    .then((newUser)=>{
-      res.status(201).json(newUser)
+    .then((newProject)=>{
+      res.status(201).json(newProject)
       
     })
     .catch((error) => {
@@ -34,15 +42,15 @@ router.post('/',(req, res) => {
     })
   });
 
-router.put('/:id',validateproj(), validateProId(),(req, res) => {
-    // do your magic!
-   db.update(req.params.id, req.body.description)
+router.put('/:id', validatePro(),(req, res) => {
+  
+   db.update(req.params.id, req.body)
     .then((update)=>{
       if(update){
-        res.status(200).json(update)
+        res.status(200).json({ message: "Project has been updated"})
       }else {
         res.status(404).json({
-          message: "Can't find the user",
+          message: "Can not update",
         })
       }
     })
@@ -68,15 +76,10 @@ router.put('/:id',validateproj(), validateProId(),(req, res) => {
   })
   
   });
-  router.post('/:id/posts',(req, res) => {
-    if (!req.body.description){
-        return res.status(400).json({
-        message:"Need a description value."
-         })
-         }
+  router.get('/:id',(req, res) => {
    db.getProjectActions(req.params.id)
-  .then(post=>{
-    res.status(200).json(post)
+  .then(action=>{
+    res.status(200).json(action)
    
   })
   .catch((error) => {

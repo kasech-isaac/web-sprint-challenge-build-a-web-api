@@ -1,54 +1,24 @@
 const proj_db = require("../data/helpers/projectModel");
 const action_db = require("../data/helpers/actionModel");
 
-function validateUserId() {
+function validateAction() {
   return (req, res, next) => {
-    action_db
-      .get(req.params.id)
-      .then((user) => {
-        if (user) {
-    
-          req.user = user;
-          next();
-        } else {
-          res.status(400).json({ message: "Invalid user ID" });
-        }
-      })
-      .catch((error) => {
-        next(error);
-      });
+    // action_db.get(req.params.id)
+     
+        if(!req.body){
+          res.status(400).json({ message: "Please add data" }); 
+      } else if(!req.body.project_id || !req.body.notes || !req.body.description){
+          res.status(400).json({ message: "Please add required field" }); 
+      } else if(req.body.description.length > 160){
+          res.status(403).json({ message: " Description can not be more than  160 characters" }); 
+      } else {
+          next(); 
+      }
   };
 }
 
-function validateUser(){
-    return (req, res, next)=>{
-        if (!req.body.project_id ||!req.body.description) {
-            res.status(400).json({
-                message: "Missing user name or description",
-            })
-        }
-        next()
-    }
-}
-
-function validateProjectId(){
-  postDb.getById(req.params.id)
-  .then((project)=>{
-      if (project){
-          req.project=project
-          next()
-      }else{
-          res.status(400).json({message: "invalid project id"})
-      }
-  })
-}
-
-
 
 module.exports={
-    validateUser,
-    validateUserId,
-    validateProjectId
-   
-
+  
+    validateAction
 }

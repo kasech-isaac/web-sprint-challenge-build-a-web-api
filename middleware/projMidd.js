@@ -1,39 +1,22 @@
 const proj_db = require("../data/helpers/projectModel");
 // const action_db = require("../data/helpers/actionModel");
 
-function validateProId() {
+function validatePro() {
   return (req, res, next) => {
-    proj_db.get(req.params.id)
-      .then((user) => {
-        if (user) {
-    
-          req.user = user;
-          next();
-        } else {
-          res.status(400).json({ message: "Invalid user ID" });
-        }
-      })
-      .catch((error) => {
-        next(error);
+    if (!req.body) {
+      res.status(400).json({
+        message: "Missing data",
       });
+    } else if (!req.body.name || !req.body.description) {
+      res.status(400).json({
+        message: "Missing user name or description",
+      });
+    } else {
+      next();
+    }
   };
 }
 
-function validateproj(){
-    return (req, res, next)=>{
-        if (!req.body.project_id ||!req.body.description) {
-            res.status(400).json({
-                message: "Missing user name or description",
-            })
-        }
-        next()
-    }
-}
-
-module.exports={
-    validateproj,
-    validateProId,
-
-   
-
-}
+module.exports = {
+  validatePro,
+};

@@ -1,42 +1,39 @@
 const express = require("express");
 const action_db = require("../data/helpers/actionModel");
-const { validateUserId, validateUser } = require("../middleware/actionAndProj");
+const { validateAction, validateUser } = require("../middleware/actionAndProj");
 const router = express.Router();
 
 router.get("/", (req, res) => {
   
     action_db.get()
-    .then((user) => {
-      res.status(200).json(user);
+    .then((action) => {
+      res.status(200).json(action);
     })
     .catch((error) => {
       next(error);
     });
 });
 
-router.get("/:id", validateUserId(), (req, res) => {
-  res.status(200).json(req.user);
-});
 
-router.post("/", validateUser(), (req, res) => {
-    action_db.insert(req.body)
-    .then((add) => {
-      res.status(201).json(add);
-    })
-    .catch((error) => {
-      next(error);
-    });
-});
 
-router.put('/:id',validateUser(), validateUserId(),(req, res) => {
-    // do your magic!
-    action_db.update(req.params.id, req.body.description)
-    .then((update)=>{
-      if(update){
-        res.status(200).json(update)
+router.post("/",validateAction(),(req, res) => {
+action_db.insert(req.body)
+  .then((newAction)=>{
+      res.status(200).json(newAction)
+  })
+  .catch((error)=>{
+      next(error)
+  })
+})
+
+router.put('/:id',validateAction(),(req, res) => {
+    action_db.update(req.params.id, req.body)
+    .then((updateAction)=>{
+      if(updateAction){
+        res.status(200).json({message:"Action has been updated"})
       }else {
         res.status(404).json({
-          message: "Can't find the user",
+          message: "Can't update",
         })
       }
     })
